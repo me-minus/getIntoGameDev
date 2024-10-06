@@ -1,6 +1,6 @@
 #include <iostream>
+#include <exception>
 #include "logger.h"
-
 Logger* Logger::logger;
 
 VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
@@ -107,16 +107,20 @@ vk::DebugUtilsMessengerEXT Logger::make_debug_messenger(
 		nullptr
 	);
 
-	vk::DebugUtilsMessengerEXT messenger = instance.createDebugUtilsMessengerEXT(createInfo, nullptr, dldi);
-	VkDebugUtilsMessengerEXT handle = messenger;
-	deletionQueue.push_back([this, handle, dldi](vk::Instance instance) {
-		instance.destroyDebugUtilsMessengerEXT(handle, nullptr, dldi);
-		if (enabled) {
-			std::cout << "Deleted Debug Messenger!" << std::endl;
-		}
+	auto messenger = instance.createDebugUtilsMessengerEXT(createInfo, nullptr, dldi);
+	if (messenger.result == vk::Result::eSuccess) {
+		VkDebugUtilsMessengerEXT handle = messenger.value;
+		deletionQueue.push_back([this, handle, dldi](vk::Instance instance) {
+			instance.destroyDebugUtilsMessengerEXT(handle, nullptr, dldi);
+			if (enabled) {
+				std::cout << "Deleted Debug Messenger!" << std::endl;
+			}
 		});
+	} else {
+		throw std::runtime_error("creation of DebugUtilsMessengerEXT failed");
+	}
 
-	return messenger;
+	return messenger.value;
 }
 
 void Logger::log(const vk::PhysicalDevice& device) {
