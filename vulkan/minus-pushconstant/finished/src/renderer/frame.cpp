@@ -109,6 +109,7 @@ void Frame::annoying_boilerplate_that_dynamic_rendering_was_meant_to_spare_us() 
 		| vk::ColorComponentFlagBits::eB
 		| vk::ColorComponentFlagBits::eA;
 	commandBuffer.setColorWriteMaskEXT(0, colorWriteMask, dl);
+	commandBuffer.setVertexInputEXT(0,nullptr, 0,nullptr, dl);
 }
 
 void Frame::render() {
