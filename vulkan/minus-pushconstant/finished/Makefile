@@ -12,7 +12,8 @@ RENDERER = src/renderer/device.o \
 	   src/renderer/shader.o \
 	   src/renderer/swapchain.o \
            src/renderer/command.o \
-	   src/renderer/synchronisation.o
+	   src/renderer/synchronisation.o \
+           src/renderer/pushconstants.o
 
 CONTROLLER = src/controller/app.o
 

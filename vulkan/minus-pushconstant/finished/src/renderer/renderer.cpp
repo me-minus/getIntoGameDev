@@ -43,6 +43,7 @@ Engine::Engine(GLFWwindow* window) :
 		logicalDevice, physicalDevice, surface, width, height,
 		deviceDeletionQueue);
 
+	make_pipeline_layout();
 	shaders = make_shader_objects(logicalDevice,
 		"shader", dldi,
 		deviceDeletionQueue);
@@ -66,7 +67,7 @@ void Engine::make_drawing_instruction_pipeline() {
 	for (uint32_t i = 0; i < 4; ++i) {
 		frames.push_back(Frame(dldi, logicalDevice, deviceDeletionQueue,
 			allocate_command_buffer(logicalDevice, commandPool), swapchain,
-			shaders, graphicsQueues[i]));
+				       shaders, pipelineLayout, pushConstants, graphicsQueues[i]));
 	}
 
 	// "Pre record" work for command buffers
@@ -157,6 +158,26 @@ void Engine::make_drawing_instruction_pipeline() {
 		});
 }
 
+void Engine::make_pipeline_layout()
+{
+  Logger* logger=Logger::get_logger();
+  
+  vk::PipelineLayoutCreateInfo layoutInfo;
+  layoutInfo.flags = vk::PipelineLayoutCreateFlags();
+  layoutInfo.setPushConstantRanges(pushConstants.getRanges());
+
+  auto result=logicalDevice.createPipelineLayout(layoutInfo);
+  if (result.result == vk::Result::eSuccess) {
+    pipelineLayout = result.value;
+    deviceDeletionQueue.push_back( [this, logger](vk::Device device) {
+      logger->print("Destroyed pipelineLayout!");
+      logicalDevice.destroyPipelineLayout(pipelineLayout);
+    });
+  } else {
+    logger->print("Failed to create pipelineLayout");
+  }
+}
+
 void Engine::draw() {
 
 	executor.run(drawingJobs[currentFrame]).wait();
@@ -164,6 +185,8 @@ void Engine::draw() {
 }
 
 void Engine::update_timing() {
+        pushConstants.update_value();
+  
 	currentTime = glfwGetTime();
 	double delta = currentTime - lastTime;
 

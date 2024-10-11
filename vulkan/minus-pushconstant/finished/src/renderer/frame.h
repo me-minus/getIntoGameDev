@@ -5,6 +5,7 @@
 #include <deque>
 #include <functional>
 #include "swapchain.h"
+#include "pushconstants.h"
 
 /**
  * @brief Holds all the state used in one
@@ -28,6 +29,8 @@ public:
         vk::CommandBuffer commandBuffer,
         Swapchain& swapchain,
         std::vector<vk::ShaderEXT>& shaders,
+	vk::PipelineLayout pipelineLayout,
+	PushConstants& pushConstants,
         vk::Queue& queue);
 
     /**
@@ -86,8 +89,11 @@ private:
 
     std::vector<vk::ShaderEXT>& shaders;
 
+    vk::PipelineLayout pipelineLayout;
+
+    PushConstants& pushConstants;
+
     vk::DispatchLoaderDynamic& dl;
 
     vk::Queue& queue;
-
 };

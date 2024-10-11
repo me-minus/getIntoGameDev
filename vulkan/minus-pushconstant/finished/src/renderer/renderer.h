@@ -9,7 +9,7 @@
 #include "swapchain.h"
 #include <vector>
 #include <taskflow/taskflow.hpp>
-
+#include "pushconstants.h"
 /**
  * @brief Vroom vroom.
  *
@@ -119,8 +119,18 @@ private:
     std::vector<vk::ShaderEXT> shaders;
 
     /**
-    * @brief memory pool for command buffer allocation
-    */
+     * @brief pipeline layout
+     */
+    vk::PipelineLayout pipelineLayout;
+
+    /**
+     * @brief pushconstants object
+     */
+    PushConstants pushConstants;
+  
+    /**
+     * @brief memory pool for command buffer allocation
+     */
     vk::CommandPool commandPool;
 
     /**
@@ -148,4 +158,5 @@ private:
     float frameTime;
 
     void make_drawing_instruction_pipeline();
+  void   make_pipeline_layout();
 };

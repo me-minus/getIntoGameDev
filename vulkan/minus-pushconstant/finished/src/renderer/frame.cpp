@@ -8,9 +8,12 @@ Frame::Frame(vk::DispatchLoaderDynamic& dl,
 	vk::CommandBuffer commandBuffer,
 	Swapchain& swapchain,
 	std::vector<vk::ShaderEXT>& shaders,
+	vk::PipelineLayout pipelineLayout,
+	PushConstants& pushConstants,
 	vk::Queue& queue):
 	logicalDevice(logicalDevice), dl(dl), swapchain(swapchain),
-	shaders(shaders), queue(queue) {
+	shaders(shaders), pipelineLayout(pipelineLayout),
+	pushConstants(pushConstants), queue(queue) {
 	imageAquiredSemaphore = make_semaphore(logicalDevice, deviceDeletionQueue);
 	renderFinishedSemaphore = make_semaphore(logicalDevice, deviceDeletionQueue);
 	renderFinishedFence = make_fence(logicalDevice, deviceDeletionQueue);
@@ -62,6 +65,8 @@ void Frame::record_draw_commands() {
 		vk::ShaderStageFlagBits::eFragment
 	};
 	commandBuffer.bindShadersEXT(stages, shaders, dl);
+
+	pushConstants.record_draw_commands(commandBuffer,pipelineLayout,dl);
 
 	commandBuffer.draw(3, 1, 0, 0);
 

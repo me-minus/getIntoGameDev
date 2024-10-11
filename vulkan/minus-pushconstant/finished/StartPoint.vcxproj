@@ -163,6 +163,7 @@
     <ClCompile Include="src\renderer\shader.cpp" />
     <ClCompile Include="src\renderer\swapchain.cpp" />
     <ClCompile Include="src\renderer\synchronisation.cpp" />
+    <ClCompile Include="src\renderer\pushconstants.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\backend\file.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="src\renderer\shader.h" />
     <ClInclude Include="src\renderer\swapchain.h" />
     <ClInclude Include="src\renderer\sychronisation.h" />
+    <ClInclude Include="src\renderer\pushconstants.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
