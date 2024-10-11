@@ -127,13 +127,11 @@ vk::Device create_logical_device(
 	//Request features
 	vk::PhysicalDeviceFeatures deviceFeatures = vk::PhysicalDeviceFeatures();
 	vk::PhysicalDeviceShaderObjectFeaturesEXT shaderFeatures = vk::PhysicalDeviceShaderObjectFeaturesEXT(1);
-	vk::PhysicalDeviceDynamicRenderingFeaturesKHR dynamicFeatures = vk::PhysicalDeviceDynamicRenderingFeaturesKHR(1);
 	vk::PhysicalDeviceVulkan13Features vulkan13Features;
 	vulkan13Features.setSynchronization2(true);
-
+        vulkan13Features.setDynamicRendering(true);
 	//Chain them together
-	shaderFeatures.pNext = &dynamicFeatures;
-	dynamicFeatures.pNext = &vulkan13Features;
+	shaderFeatures.pNext = &vulkan13Features;
 
 	uint32_t enabled_layer_count = 1;
 	const char** ppEnabledLayers = nullptr;
